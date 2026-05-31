@@ -85,8 +85,10 @@
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
-            <artifactId>webjars-locator</artifactId>
-            <version>0.52</version>
+            <artifactId>webjars-locator-lite</artifactId>
+ 
+ 
+ 
         </dependency>
         <dependency>
             <groupId>com.mysql</groupId>
