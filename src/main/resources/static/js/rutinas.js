@@ -28,4 +28,4 @@ document.addEventListener('DOMContentLoaded', function () {
 //Para quitar toast
 setTimeout(() => {
     document.querySelectorAll('.toast').forEach(t => t.classList.remove('show'));
-}, 4000); //tiempo para ocultar ventana
+}, 6000); //tiempo para ocultar ventana

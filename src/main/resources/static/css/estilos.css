@@ -1,11 +1,11 @@
 body {
-    background-color: whitesmoke;
+    background-color: blue;
     font-family: serif;
 }
 
 header {
     position: fixed;
-    background-color: black;
+    background-color: purple;
     top: 0;
     left: 0;
     width: 100%;
@@ -15,7 +15,7 @@ header {
 
 aside {
     position: fixed;  
-    background-color: whitesmoke;
+    background-color: red;
     top: 110px;
     left: 0;
     width: 20%;
@@ -24,7 +24,7 @@ aside {
 }
 section {
     position: fixed;  
-    background-color: bisque;
+    background-color: green;
     top: 110px;
     left: 20%;
     width: 80%;
@@ -75,12 +75,12 @@ nav {
 
 .menu-item {
     padding: 5px;
-    background-color: darkseagreen;
+    background-color: yellowgreen;
     border-radius: 10px;
 }
 
 .menu-item:hover {
-    background-color: darkgrey;
+    background-color: blueviolet;
 }
 
 
