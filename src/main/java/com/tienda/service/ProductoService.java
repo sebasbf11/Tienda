@@ -3,6 +3,7 @@ package com.tienda.service;
 import com.tienda.domain.Producto;
 import com.tienda.repository.ProductoRepository;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -13,18 +14,18 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class ProductoService {
 
-    // El repositorio es final para asegurar la inmutabilidad
     private final ProductoRepository productoRepository;
     private final FirebaseStorageService firebaseStorageService;
 
-    public ProductoService(ProductoRepository productoRepository, FirebaseStorageService firebaseStorageService) {
+    public ProductoService(ProductoRepository productoRepository,
+            FirebaseStorageService firebaseStorageService) {
         this.productoRepository = productoRepository;
         this.firebaseStorageService = firebaseStorageService;
     }
 
     @Transactional(readOnly = true)
     public List<Producto> getProductos(boolean activo) {
-        if (activo) { //Sólo activos...            
+        if (activo) {
             return productoRepository.findByActivoTrue();
         }
         return productoRepository.findAll();
@@ -41,7 +42,7 @@ public class ProductoService {
         if (!imagenFile.isEmpty()) { //Si no está vacío... pasaron una imagen...            
             try {
                 String rutaImagen = firebaseStorageService.uploadImage(
-                        imagenFile, "producto", //para el bucket de firebase
+                        imagenFile, "producto",
                         producto.getIdProducto());
                 producto.setRutaImagen(rutaImagen);
                 productoRepository.save(producto);
@@ -53,16 +54,32 @@ public class ProductoService {
 
     @Transactional
     public void delete(Integer idProducto) {
-        // Verifica si el producto existe antes de intentar eliminarlo
+        // Verifica si la categoría existe antes de intentar eliminarlo
         if (!productoRepository.existsById(idProducto)) {
             // Lanza una excepción para indicar que el usuario no fue encontrado
-            throw new IllegalArgumentException("El producto con ID " + idProducto + " no existe.");
+            throw new IllegalArgumentException("La categoría con ID " + idProducto + " no existe.");
         }
         try {
             productoRepository.deleteById(idProducto);
         } catch (DataIntegrityViolationException e) {
             // Lanza una nueva excepción para encapsular el problema de integridad de datos
-            throw new IllegalStateException("No se puede eliminar el producto. Tiene datos asociados.", e);
+            throw new IllegalStateException("No se puede eliminar la producto. Tiene datos asociados.", e);
         }
     }
+
+    @Transactional(readOnly = true)
+    public List<Producto> consultaDerivada(double precioInf, double precioSup) {
+        return productoRepository.findByPrecioBetweenOrderByPrecioAsc(precioInf, precioSup);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Producto> consultaJPQL(double precioInf, double precioSup) {
+        return productoRepository.consultaJPQL(precioInf, precioSup);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Producto> consultaSQL(double precioInf, double precioSup) {
+        return productoRepository.consultaSQL(precioInf, precioSup);
+    }
+
 }
